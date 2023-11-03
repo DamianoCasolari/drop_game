@@ -1,0 +1,223 @@
+.main_board {
+    height: calc(100vh - 80px);
+    position: relative;
+    // z-index: 2;
+
+    .game_space {
+        // background-color: aqua;
+        border-radius: 15px;
+        border: 3px solid #7f7f7f;
+        overflow: hidden;
+        max-width: 500px;
+        background: linear-gradient(90deg, #cbc5f8, #d5d8ff);
+
+        .dropsEscaped {
+            color: white;
+        }
+
+        .totalPoints {
+            color: rgb(15, 14, 14);
+        }
+
+
+    }
+
+
+}
+
+
+// ANIMATION WAVES 
+
+
+.game_space .sea {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100px;
+    background: url(https://1.bp.blogspot.com/-xQUc-TovqDk/XdxogmMqIRI/AAAAAAAACvI/AizpnE509UMGBcTiLJ58BC6iViPYGYQfQCLcBGAsYHQ/s1600/wave.png);
+    background-size: 1000px 100px;
+}
+
+.game_space .sea.sea1 {
+    animation: wave 30s linear infinite;
+    z-index: 1000;
+    opacity: 1;
+    animation-delay: 0s;
+    bottom: 0;
+}
+
+.game_space .sea.sea2 {
+    animation: wave2 15s linear infinite;
+    z-index: 999;
+    opacity: 0.5;
+    animation-delay: -5s;
+    bottom: 10px;
+}
+
+.game_space .sea.sea3 {
+    animation: wave 30s linear infinite;
+    z-index: 998;
+    opacity: 0.2;
+    animation-delay: -2s;
+    bottom: 15px;
+}
+
+.game_space .sea.sea4 {
+    animation: wave2 5s linear infinite;
+    z-index: 997;
+    opacity: 0.7;
+    animation-delay: -5s;
+    bottom: 20px;
+}
+
+@keyframes wave {
+    0% {
+        background-position-x: 0px;
+    }
+
+    100% {
+        background-position-x: 1000px;
+    }
+}
+
+@keyframes wave2 {
+    0% {
+        background-position-x: 0px;
+    }
+
+    100% {
+        background-position-x: -1000px;
+    }
+}
+
+
+// ANIMATION LIVES
+
+.thrill {
+    animation: thrill 3s infinite ease-in-out;
+}
+
+.thrill2 {
+    animation: thrill2 3s infinite ease-in-out;
+}
+
+.thrill3 {
+    animation: thrill3 3s infinite ease-in-out;
+}
+
+
+@keyframes thrill {
+
+    0% {
+        transform: translateX(0);
+    }
+
+    5% {
+        transform: rotateZ(-5deg);
+    }
+
+    10% {
+        transform: rotateZ(5deg);
+    }
+
+    15% {
+        transform: rotateZ(-5deg);
+    }
+
+    20% {
+        transform: rotateZ(5deg);
+    }
+
+    25% {
+        transform: rotateZ(-5deg);
+    }
+
+    30% {
+        transform: rotateZ(5deg);
+    }
+
+    35% {
+        transform: translateX(0px);
+    }
+
+    100% {
+        transform: translateX(0px);
+    }
+}
+
+@keyframes thrill2 {
+
+    35% {
+        transform: rotateZ(0);
+    }
+
+    40% {
+        transform: rotateZ(5deg);
+    }
+
+    45% {
+        transform: rotateZ(-5deg);
+    }
+
+    50% {
+        transform: rotateZ(5deg);
+    }
+
+    55% {
+        transform: rotateZ(-5deg);
+    }
+
+    60% {
+        transform: rotateZ(5deg);
+    }
+
+    65% {
+        transform: rotateZ(-5deg);
+    }
+
+    70% {
+        transform: rotateZ(0deg);
+    }
+
+    100% {
+        transform: translateX(0px);
+    }
+
+}
+
+@keyframes thrill3 {
+
+    65% {
+        transform: rotateZ(0deg);
+    }
+
+    70% {
+        transform: rotateZ(-5deg);
+    }
+
+    75% {
+        transform: rotateZ(5deg);
+    }
+
+    80% {
+        transform: rotateZ(-5deg);
+    }
+
+    85% {
+        transform: rotateZ(5deg);
+    }
+
+    90% {
+        transform: rotateZ(-5deg);
+    }
+
+    95% {
+        transform: rotateZ(5deg);
+    }
+
+    100% {
+        transform: rotateZ(0deg);
+    }
+
+}

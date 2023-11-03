@@ -1,0 +1,72 @@
+.drop {
+    width: 20px;
+    height: 0px;
+    background-color: rgb(0, 0, 0);
+    right: 10%;
+    border-radius: 50%;
+    animation: drop_effect 6s linear both;
+    filter: drop-shadow(0 1px 0px rgb(175, 175, 175));
+}
+
+@keyframes drop_effect {
+
+    0% {
+        top: -10px;
+        border-radius: 50% 48% 47% 51%;
+    }
+
+    10% {
+        border-radius: 46% 48% 50% 51%;
+    }
+
+    20% {
+        border-radius: 52% 50% 47% 50%;
+    }
+
+    30% {
+        border-radius: 50% 53% 54% 47%;
+    }
+
+    40% {
+        border-radius: 48% 48% 52% 51%;
+    }
+
+    50% {
+        width: 20px;
+        top: -5px;
+        height: 30px;
+        border-radius: 47% 50% 51% 48%;
+    }
+
+    60% {
+        height: 20px;
+        border-radius: 51% 47% 52% 50%;
+
+    }
+
+    70% {
+        width: 18px;
+        height: 20px;
+        top: calc(100% + 20px);
+        border-radius: 50%;
+        border-radius: 50% 48% 47% 51%;
+    }
+
+    100% {
+        width: 18px;
+        height: 20px;
+        top: calc(100% + 20px);
+        border-radius: 50%;
+    }
+
+}
+
+
+.cursor_pointer {
+    cursor: pointer;
+}
+
+
+.custom_cursor {
+    width: 50px;
+}
