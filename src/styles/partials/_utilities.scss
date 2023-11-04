@@ -97,6 +97,29 @@
 }
 
 
+// HOVER SELECTORS
+
+.hover_scale {
+    transition-duration: 0.4s;
+
+    &:hover {
+        transform: scale(1.03);
+        filter: drop-shadow(1px 2px 1px rgb(57, 57, 57));
+    }
+}
+
+//CLICK SELECTORS
+
+.click_effect {
+    transition-duration: 0.4s;
+
+    &:active {
+        transform: scale(1);
+        filter: drop-shadow(0px 0px 0px rgb(57, 57, 57));
+    }
+}
+
+
 // ANIMATION 
 
 .fade_in_out {
@@ -173,16 +196,14 @@
 
 @keyframes appear {
     0% {
-        // opacity: 0;
         transform: translateY(0px);
     }
 
-    25% {
+    10% {
         transform: translateY(-20px);
     }
 
-    50% {
-        // opacity: 1;
+    20% {
         transform: translateY(0px);
     }
 

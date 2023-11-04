@@ -1,5 +1,6 @@
 <script>
 
+
 export default {
     name: "MainBoard",
     data() {
@@ -364,6 +365,64 @@ export default {
 
 
         },
+        mojsConfetti() {
+            const BUST_OPTS = {
+                x: { 0: -300 },
+                y: { 0: -50 },
+                radius: { 50: 150 },
+                angle: { 0: -25 },
+                degree: 200,
+                isForce3d: true
+            }
+
+            const CHILD_OPTS = {
+                shape: ['circle', 'rect'],
+                fill: ['white', 'yellow'],
+                radius: 'rand(7, 10)',
+                opacity: .75,
+                isSwirl: true,
+                pathScale: 'rand(.3, 1)',
+                degreeShift: 'rand(-30, 30)',
+                swirlFrequency: 5,
+                duration: 1400,
+                easing: 'linear.none',
+                isForce3d: true,
+            }
+
+            const burst1 = new mojs.Burst({
+                ...BUST_OPTS,
+                parent: '.game_space',
+                width: 320,
+                height: 320,
+                children: {
+                    ...CHILD_OPTS
+                }
+            });
+
+            const burst2 = new mojs.Burst({
+                ...BUST_OPTS,
+                parent: '.game_space',
+                radius: { 30: 60 },
+                count: 3,
+                width: 140,
+                height: 140,
+                timeline: { delay: 585 },
+                children: {
+                    ...CHILD_OPTS
+                }
+            });
+
+
+            burst1
+                .generate()
+                .replay();
+
+            burst2
+                .generate()
+                .replay();
+
+
+        },
         waveTitle() {
             this.$nextTick(() => {
                 let titleCOntainer = document.querySelector('#gameOver_container');
@@ -482,6 +541,7 @@ export default {
             this.mojsPoints(displaypointsX, displaypointsY, rundomColor)
             if (this.totalPoints >= this.levelGame) {
                 this.mojsLevel()
+                this.mojsConfetti()
                 this.levelGame += 5
                 this.newLevel = true
                 this.$nextTick(() => {
@@ -529,6 +589,7 @@ export default {
 
     },
     mounted() {
+        this.mojsConfetti()
         this.mojsSmoke()
     }
 
@@ -557,14 +618,17 @@ export default {
                         Score
                     </span>
                 </div>
-                <div @click=" startGameFunction()" class="fade_in button_start mx-3 text-center">Let's protect the sea</div>
+                <div @click=" startGameFunction()" class="fade_in hover_scale click_effect button_start mx-3 text-center">
+                    Let's protect
+                    the sea</div>
             </div>
+            <!-- LEVEL GAME SIDE -->
             <div
                 class="level_game flex-column position-absolute h-100 w-100 d-flex justify-content-center align-items-center z-1">
                 <div v-show="newLevel" class=" mx-3 text-center fs-1 position-absolute z-1">Level {{ levelGame / 5 }}</div>
             </div>
 
-
+            <!-- HEART/POINTS GAME SIDE -->
             <div class="fade_in d-flex justify-content-between align-items-center m-3" v-if="startGame">
 
                 <div class="lives_container text-start dropsEscaped fw-bold d-flex">
@@ -584,6 +648,8 @@ export default {
                 }}</strong><span class="fs_8">
                         Score</span></div>
             </div>
+
+            <!-- WAVES SIDE -->
             <div class='sea sea1' :style="{ filter: `invert(${levelPollution})` }"></div>
             <div class='sea sea2' :style="{ filter: `invert(${levelPollution})` }"></div>
             <div class='sea sea3' :style="{ filter: `invert(${levelPollution})` }"></div>
