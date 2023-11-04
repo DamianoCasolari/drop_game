@@ -8,14 +8,14 @@ export default {
             idDrop: 0,
             firstGame: true,
             DropY: 0,
-            timeGapDrops: 1000,
+            timeGapDrops: 3000,
             totalPoints: 0,
             dropsEscaped: 0,
             randomNumber: 0,
             numberSpokes: 4,
             insideGameSpace: false,
             levelPollution: 0,
-            levelGame: 5,
+            levelGame: 20,
             newLevel: false,
             startGame: false,
             intervalId: null
@@ -169,6 +169,7 @@ export default {
                 GRREN: 'RGB(0, 255, 26)',
                 BLUE: '#8a93c3',
             }
+
 
             const burst2 = new mojs.Burst({
                 left: 0, top: 0,
@@ -536,13 +537,19 @@ export default {
             drop.remove()
             const displaypoints = document.querySelector(".totalPoints")
             const displaypointsX = displaypoints.getBoundingClientRect().left - displaypoints.clientWidth / 2;
-            const displaypointsY = displaypoints.getBoundingClientRect().top + displaypoints.clientHeight + 10;
+            const displaypointsY = displaypoints.getBoundingClientRect().top + displaypoints.clientHeight + 15;
             const rundomColor = 'rgb(' + this.generateRandomNumber() + ',' + this.generateRandomNumber() + ',' + this.generateRandomNumber() + ')'
             this.mojsPoints(displaypointsX, displaypointsY, rundomColor)
             if (this.totalPoints >= this.levelGame) {
                 this.mojsLevel()
                 this.mojsConfetti()
-                this.levelGame += 5
+                this.numberSpokes += 4
+                this.levelGame += 20
+                if (this.timeGapDrops > 1000) {
+                    this.timeGapDrops -= 400
+                } else {
+                    this.timeGapDrops = this.timeGapDrops / 2
+                }
                 this.newLevel = true
                 this.$nextTick(() => {
                     document.querySelector('.level_game').classList.add('fade_in_out')
@@ -551,6 +558,10 @@ export default {
                         document.querySelector('.level_game').classList.remove('fade_in_out')
                     }, 1000)
                 });
+                clearInterval(this.intervalId);
+                this.intervalId = setInterval(() => {
+                    this.createDrop();
+                }, this.timeGapDrops);
 
             }
 
@@ -561,7 +572,11 @@ export default {
             this.levelPollution = 0
             this.totalPoints = 0
             this.dropsEscaped = 0
-            this.levelGame = 5
+            this.levelGame = 20
+            this.levelGame = 20
+            this.timeGapDrops = 3000
+            this.numberSpokes = 4
+
 
             this.$nextTick(() => {
                 const lives_container = document.querySelector(".lives_container");
@@ -584,8 +599,6 @@ export default {
                 }, this.timeGapDrops);
             });
         },
-
-
 
     },
     mounted() {
@@ -618,14 +631,15 @@ export default {
                         Score
                     </span>
                 </div>
-                <div @click=" startGameFunction()" class="fade_in hover_scale click_effect button_start mx-3 text-center">
+                <div @click="startGameFunction()" @mouseover="mojsConfetti(); mojsSmoke()"
+                    class="fade_in hover_scale click_effect button_start mx-3 text-center">
                     Let's protect
                     the sea</div>
             </div>
             <!-- LEVEL GAME SIDE -->
             <div
                 class="level_game flex-column position-absolute h-100 w-100 d-flex justify-content-center align-items-center z-1">
-                <div v-show="newLevel" class=" mx-3 text-center fs-1 position-absolute z-1">Level {{ levelGame / 5 }}</div>
+                <div v-show="newLevel" class=" mx-3 text-center fs-1 position-absolute z-1">Level {{ levelGame / 20 }}</div>
             </div>
 
             <!-- HEART/POINTS GAME SIDE -->
@@ -655,9 +669,8 @@ export default {
             <div class='sea sea3' :style="{ filter: `invert(${levelPollution})` }"></div>
             <div class='sea sea4' :style="{ filter: `invert(${levelPollution})` }"></div>
             <div v-if="startGame" class="fade_left z_10000 display_level position-absolute end-0 bottom-0 p-3"
-                :class="levelPollution > 0 ? 'text-white' : 'text-dark '">Level {{ levelGame / 5 }}
+                :class="levelPollution > 0 ? 'text-white' : 'text-dark '">Level {{ levelGame / 20 }}
             </div>
-            <!-- <div class='sea sea2' :style="{ filter: 'invert(' + levelPollution + ')' }"></div> -->
 
         </div>
 
