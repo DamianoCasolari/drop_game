@@ -1,7 +1,22 @@
 .main_board {
     height: calc(100vh - 80px);
     position: relative;
-    // z-index: 2;
+    // background-image: url(../../../public/);
+    // background-position: left;
+    // background-size: cover;
+    // background-repeat: no-repeat;
+
+    .overlay_start {
+        z-index: 100000;
+
+        .button_start {
+            cursor: pointer;
+            border: 3px solid #7f7f7f;
+            border-radius: 15px;
+            padding: 20px 30px;
+            background-color: #e8e5ff;
+        }
+    }
 
     .game_space {
         // background-color: aqua;
@@ -15,7 +30,7 @@
             color: white;
         }
 
-        .totalPoints {
+        .points_container {
             color: rgb(15, 14, 14);
         }
 
@@ -94,7 +109,7 @@
 
 // ANIMATION LIVES
 
-.thrill {
+.thrill1 {
     animation: thrill 3s infinite ease-in-out;
 }
 

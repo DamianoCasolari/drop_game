@@ -5,62 +5,26 @@ export default {
     data() {
         return {
             idDrop: 0,
+            firstGame: true,
             DropY: 0,
+            timeGapDrops: 1000,
             totalPoints: 0,
             dropsEscaped: 0,
             randomNumber: 0,
             numberSpokes: 4,
             insideGameSpace: false,
-            levelPollution: 0
+            levelPollution: 0,
+            levelGame: 5,
+            newLevel: false,
+            startGame: false,
+            intervalId: null
 
         }
     },
     methods: {
-        createDrop() {
-            const SpecificID = this.idDrop;
-            const container = document.querySelector('.game_space');
-            const maxWidth = container.clientWidth;
-            const randomValue = Math.random();
-            let positionDrop = Math.abs(Math.floor(maxWidth * randomValue - 20));
-
-            const drop = `<div id="drop${this.idDrop}" class="drop position-absolute z-3" style="right:calc(${positionDrop}px);"></div>`;
-
-            container.insertAdjacentHTML('beforeend', drop);
-            const lastDrop = document.getElementById(`drop${this.idDrop}`);
-
-            const options = {
-                root: container,
-                rootMargin: '30px',
-                threshold: 1.0
-            };
-
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (!entry.isIntersecting) {
-                        this.dropsEscaped++
-                        const livesContainer = document.querySelector(".lives_container")
-                        if (livesContainer.children.length > 0 && !this.insideGameSpace) {
-                            const lastChild = livesContainer.lastElementChild;
-                            const lastChildX = lastChild.getBoundingClientRect().left + lastChild.clientWidth / 2;
-                            const lastChildY = lastChild.getBoundingClientRect().top + lastChild.clientHeight / 2;
-                            this.mojsLives(lastChildX, lastChildY)
-                            livesContainer.removeChild(lastChild);
-                            this.levelPollution += 0.4;
-                        }
-                        this.insideGameSpace = false;
-                        observer.unobserve(lastDrop);
-                    }
-                });
-            }, options);
-
-            observer.observe(lastDrop);
-
-
-
-            lastDrop.addEventListener('mouseover', (e) => { this.pressDrop(SpecificID); this.mojsAnimation(e); });
-            this.idDrop++;
-
-
+        // ANIMATIONS
+        generateRandomNumber() {
+            return Math.floor(Math.random() * 255);
         },
         mojsLives(distX, distY) {
             const COLORS = {
@@ -162,6 +126,38 @@ export default {
                 .replay();
             ;
         },
+        mojsPoints(distx, disty, random) {
+            const DURATION = 400
+            const LIGHTGRAY = random
+
+            const smoke = new mojs.Burst({
+                left: 0, top: 0,
+                degree: 0,
+                count: 3,
+                radius: { 0: 100 },
+                children: {
+                    fill: LIGHTGRAY,
+                    pathScale: 'rand(0.5, 1)',
+                    radius: 'rand(12, 15)',
+                    swirlSize: 'rand(10, 15)',
+                    swirlFrequency: 'rand(2, 4)',
+                    direction: [1, -1],
+                    duration: `rand(${1 * DURATION}, ${2 * DURATION})`,
+                    delay: 'rand(0, 75)',
+                    easing: 'quad.out',
+                    isSwirl: true,
+                    isForce3d: true,
+                }
+            });
+
+
+
+            smoke
+                .tune({ x: distx, y: disty })
+                .generate()
+                .replay();
+
+        },
         mojsAnimation(e) {
             const COLORS = {
                 RED: '#FD5061',
@@ -195,6 +191,193 @@ export default {
                 .generate()
                 .replay();
         },
+        mojsLevel() {
+            const meteors = new mojs.Burst({
+                left: 0, top: 0,
+                count: 3,
+                radius: { 0: 250 },
+                degree: 0,
+
+                children: {
+                    shape: 'line',
+                    stroke: ['#F9DD5E', '#FC2D79', '#11CDC5'],
+                    duration: 1000,
+                    radius: 60,
+                    strokeWidth: 8,
+                    left: 'stagger(20)',
+                    top: 'stagger(20)',
+                    delay: [0, 200, 100],
+                    isForce3d: true
+                }
+            });
+
+            meteors
+                .tune({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+                .replay();
+            ;
+
+        },
+        mojsFinishGame() {
+            const COLORS = {
+                RED: '#FD5061',
+                YELLOW: '#FFCEA5',
+                // BLACK: '#29363B',
+                WHITE: 'white',
+                VINOUS: '#A50710'
+            }
+
+            const burst1 = new mojs.Burst({
+                left: 0, top: 0,
+                count: 5,
+                radius: { 50: 250 },
+                children: {
+                    fill: 'white',
+                    shape: 'line',
+                    stroke: [COLORS.WHITE, COLORS.VINOUS],
+                    strokeWidth: 12,
+                    radius: 'rand(30, 60)',
+                    radiusY: 0,
+                    scale: { 1: 0 },
+                    pathScale: 'rand(.5, 1)',
+                    degreeShift: 'rand(-360, 360)',
+                    isForce3d: true,
+                }
+            });
+
+            const burst2 = new mojs.Burst({
+                top: 0, left: 0,
+                count: 3,
+                radius: { 0: 250 },
+                children: {
+                    shape: ['circle', 'rect'],
+                    points: 5,
+                    fill: [COLORS.WHITE, COLORS.VINOUS],
+                    radius: 'rand(30, 60)',
+                    scale: { 1: 0 },
+                    pathScale: 'rand(.5, 1)',
+                    isForce3d: true
+                }
+            });
+
+            const CIRCLE_OPTS = {
+                left: 0, top: 0,
+                fill: COLORS.WHITE,
+                scale: { .2: 1 },
+                opacity: { 1: 0 },
+                isForce3d: true,
+                isShowEnd: false
+            }
+
+            const circle1 = new mojs.Shape({
+                ...CIRCLE_OPTS,
+                radius: 200,
+            });
+
+            const circle2 = new mojs.Shape({
+                ...CIRCLE_OPTS,
+                radius: 240,
+                easing: 'cubic.out',
+                delay: 150,
+            });
+
+            // document.addEventListener('click', function (e) {
+            burst1
+                .tune({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+                .generate()
+                .replay();
+
+            burst2
+                .tune({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+                .generate()
+                .replay();
+
+            circle1
+                .tune({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+                .replay();
+
+            circle2
+                .tune({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+                .replay();
+
+            // bgBurst
+            //     .tune({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+            //     .replay();
+            // });
+        },
+        mojsSmoke() {
+
+            const BUST_OPTS = {
+                parent: '.game_space',
+                count: 'rand(3,5)',
+                degree: 40,
+                angle: -25,
+                radius: { 25: 75 },
+                children: {
+                    // fill: ['#bbbbbb', '#040404', '#7f7f7f'],
+                    fill: ['yellow', 'red', 'green', 'blue'],
+                    fill: ['#fcfcfc', '#fefefe'],
+                    radius: 'rand(8, 15)',
+                    pathScale: ['rand(0, .5)', 'rand(.35, 1)'],
+                    degreeShift: 'rand(.2, 1)',
+                    swirlFrequency: 'rand(3, 5)',
+                    direction: [1, -1],
+                    isSwirl: true,
+                    duration: 1000,
+                    easing: 'cubic.out',
+                    isForce3d: true
+                }
+            }
+
+            const burst1 = new mojs.Burst({
+                ...BUST_OPTS,
+                left: '60 %',
+                top: '60 %',
+                y: { 0: -65 },
+            });
+
+            const burst2 = new mojs.Burst({
+                ...BUST_OPTS,
+                left: '55 %',
+                top: '50 %',
+                y: { 0: -50 }
+            });
+
+            const burst3 = new mojs.Burst({
+                ...BUST_OPTS,
+                left: '40 %',
+                top: '44 %',
+                y: { 0: -50 }
+            });
+
+            const burst4 = new mojs.Burst({
+                ...BUST_OPTS,
+                left: '45 %',
+                top: '53 %',
+                y: { 0: -35 }
+            });
+
+
+            burst1.replay();
+            burst2.replay();
+            burst3.replay();
+            burst4.replay();
+
+
+        },
+        waveTitle() {
+            this.$nextTick(() => {
+                let titleCOntainer = document.querySelector('#gameOver_container');
+                let titleContent = titleCOntainer.textContent
+                const letters = titleContent.split('')
+                titleCOntainer.innerHTML = '';
+
+                letters.forEach((letter, index) => {
+                    titleCOntainer.insertAdjacentHTML('beforeend', `<span class="letter" style="animation-delay: ${index * 100 + 1000}ms">${letter}</span>`)
+                })
+
+            })
+
+        },
         customCursor() {
             const cursorImage = document.getElementById('cursor-image');
             const gameSpace = document.querySelector(".game_space");
@@ -221,12 +404,68 @@ export default {
             });
 
         },
+        // LOGIC SIDE METHODS 
+        createDrop() {
+            const SpecificID = this.idDrop;
+            const container = document.querySelector('.game_space');
+            const maxWidth = container.clientWidth;
+            const randomValue = Math.random();
+            let positionDrop = Math.abs(Math.floor(maxWidth * randomValue - 20));
+
+            const drop = `<div id="drop${this.idDrop}" class="drop position-absolute z-3" style="right:calc(${positionDrop}px);"></div>`;
+
+            container.insertAdjacentHTML('beforeend', drop);
+            const lastDrop = document.getElementById(`drop${this.idDrop}`);
+
+            const options = {
+                root: container,
+                rootMargin: '30px',
+                threshold: 1.0
+            };
+
+            let observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (!entry.isIntersecting) {
+                        const livesContainer = document.querySelector(".lives_container")
+                        if (livesContainer) {
+                            if (livesContainer.children.length > 0 && !this.insideGameSpace && this.startGame) {
+                                const lastChild = livesContainer.lastElementChild;
+                                const lastChildX = lastChild.getBoundingClientRect().left + lastChild.clientWidth / 2;
+                                const lastChildY = lastChild.getBoundingClientRect().top + lastChild.clientHeight / 2;
+                                this.mojsLives(lastChildX, lastChildY)
+                                livesContainer.removeChild(lastChild);
+                                this.levelPollution += 0.4;
+                                this.dropsEscaped++
+                                if (this.dropsEscaped == 3) {
+                                    this.startGame = false
+                                    clearInterval(this.intervalId);
+                                    this.mojsFinishGame()
+                                    this.mojsSmoke()
+                                    this.waveTitle()
+
+                                }
+                            }
+                        }
+                        this.insideGameSpace = false;
+                        observer.unobserve(lastDrop);
+                    }
+                });
+            }, options);
+
+            observer.observe(lastDrop);
+
+
+
+            lastDrop.addEventListener('mouseover', (e) => { this.pressDrop(SpecificID); this.mojsAnimation(e); });
+            this.idDrop++;
+
+
+        },
         pressDrop(dropID) {
 
             const drop = document.getElementById(`drop${dropID}`);
             let points = Math.floor((drop.getBoundingClientRect().top) / 100 - 1);
             this.totalPoints += points;
-            this.dropsEscaped--
             const gameSpace = document.querySelector(".game_space")
             const distGamespaceFromTop = gameSpace.getBoundingClientRect().top
             if (drop.getBoundingClientRect().top - distGamespaceFromTop < gameSpace.clientHeight) {
@@ -235,20 +474,62 @@ export default {
             } else {
                 this.insideGameSpace = false;
             }
-            drop.classList.add("d-none")
+            drop.remove()
+            const displaypoints = document.querySelector(".totalPoints")
+            const displaypointsX = displaypoints.getBoundingClientRect().left - displaypoints.clientWidth / 2;
+            const displaypointsY = displaypoints.getBoundingClientRect().top + displaypoints.clientHeight + 10;
+            const rundomColor = 'rgb(' + this.generateRandomNumber() + ',' + this.generateRandomNumber() + ',' + this.generateRandomNumber() + ')'
+            this.mojsPoints(displaypointsX, displaypointsY, rundomColor)
+            if (this.totalPoints >= this.levelGame) {
+                this.mojsLevel()
+                this.levelGame += 5
+                this.newLevel = true
+                this.$nextTick(() => {
+                    document.querySelector('.level_game').classList.add('fade_in_out')
+                    setTimeout(() => {
+                        this.newLevel = false
+                        document.querySelector('.level_game').classList.remove('fade_in_out')
+                    }, 1000)
+                });
+
+            }
 
         },
+        startGameFunction() {
+            this.firstGame = false
+            this.startGame = true
+            this.levelPollution = 0
+            this.totalPoints = 0
+            this.dropsEscaped = 0
+            this.levelGame = 5
+
+            this.$nextTick(() => {
+                const lives_container = document.querySelector(".lives_container");
+
+                if (lives_container) {
+                    if (lives_container.children.length == 0) {
+
+                        for (let index = 0; index < 3; index++) {
+                            lives_container.insertAdjacentHTML('beforeend',
+                                ` <div class="heart_container thrill${index + 1} me-1 position-relative">
+                                <img width="30" src="../../public/pngwing.png" alt="heart_icon">
+                              </div>`
+                            )
+
+                        }
+                    }
+                }
+                this.intervalId = setInterval(() => {
+                    this.createDrop();
+                }, this.timeGapDrops);
+            });
+        },
+
 
 
     },
     mounted() {
-        const startGame = setInterval(() => {
-            this.createDrop();
-        }, 3000);
-        setTimeout(() => {
-            clearInterval(startGame);
-        }, 24000);
-
+        this.mojsSmoke()
     }
 
 }
@@ -256,13 +537,38 @@ export default {
 </script>
 
 <template>
-    <section class="main_board p-4">
-        <div class="game_space h-100 container-xl position-relative p-3 cursor_none">
-            <img id="cursor-image" src="../../public/1457.svg" class="custom_cursor"
-                style="position: absolute; display: none;">
-            <div class="d-flex justify-content-between align-items-center">
+    <section class="main_board py-4 mx-4">
+
+        <div class="game_space h-100 m-auto position-relative cursor_none">
+
+            <!-- END GAME SIDE -->
+            <div v-if="!startGame"
+                class="overlay_start flex-column position-absolute h-100 w-100 d-flex justify-content-center align-items-center fade_in">
+                <div v-if="!firstGame" class="fw-bold mb-5">
+                    <strong id="gameOver_container" class="fs-1 me-2 ">
+                        Game Over
+                    </strong>
+                </div>
+                <div v-if="!firstGame" class="fw-bold mb-5">
+                    <strong class="fs-1 me-2 thrill1 d-inline-block ">
+                        {{ totalPoints }}
+                    </strong>
+                    <span class="fs-5">
+                        Score
+                    </span>
+                </div>
+                <div @click=" startGameFunction()" class="fade_in button_start mx-3 text-center">Let's protect the sea</div>
+            </div>
+            <div
+                class="level_game flex-column position-absolute h-100 w-100 d-flex justify-content-center align-items-center z-1">
+                <div v-show="newLevel" class=" mx-3 text-center fs-1 position-absolute z-1">Level {{ levelGame / 5 }}</div>
+            </div>
+
+
+            <div class="fade_in d-flex justify-content-between align-items-center m-3" v-if="startGame">
+
                 <div class="lives_container text-start dropsEscaped fw-bold d-flex">
-                    <div class="heart_container thrill me-1 position-relative">
+                    <div class="heart_container thrill1 me-1 position-relative">
                         <img width="30" src="../../public/pngwing.png" alt="heart_icon">
                     </div>
                     <div class="heart_container thrill2 me-1">
@@ -272,15 +578,23 @@ export default {
                         <img width="30" src="../../public/pngwing.png" alt="heart_icon">
                     </div>
                 </div>
-                <div class="text-end totalPoints fw-bold"> {{ totalPoints }} Score</div>
+
+                <div class="text-end points_container fw-bold"><strong class="fs-3 me-2 totalPoints">{{
+                    totalPoints
+                }}</strong><span class="fs_8">
+                        Score</span></div>
             </div>
             <div class='sea sea1' :style="{ filter: `invert(${levelPollution})` }"></div>
             <div class='sea sea2' :style="{ filter: `invert(${levelPollution})` }"></div>
             <div class='sea sea3' :style="{ filter: `invert(${levelPollution})` }"></div>
             <div class='sea sea4' :style="{ filter: `invert(${levelPollution})` }"></div>
+            <div v-if="startGame" class="fade_left z_10000 display_level position-absolute end-0 bottom-0 p-3"
+                :class="levelPollution > 0 ? 'text-white' : 'text-dark '">Level {{ levelGame / 5 }}
+            </div>
             <!-- <div class='sea sea2' :style="{ filter: 'invert(' + levelPollution + ')' }"></div> -->
 
         </div>
+
     </section>
 </template>
 

@@ -61,12 +61,132 @@
 
 }
 
+//POSITION SELECTORS 
+
+.z_1_5 {
+    z-index: 1.5;
+}
+
+.z_10000 {
+    z-index: 10000;
+}
+
+
+
+// SIZE SELECTORS 
+
+.fs_8 {
+    font-size: 8px;
+}
+
+// COLOR SELECTORS 
+
+.text_purple {
+    color: rgb(3, 102, 188);
+}
+
+
+// CUSTOM CURSOR 
 
 .cursor_pointer {
     cursor: pointer;
 }
 
-
 .custom_cursor {
     width: 50px;
+}
+
+
+// ANIMATION 
+
+.fade_in_out {
+    animation: fadeInOut 1s both ease-in-out;
+}
+
+@keyframes fadeInOut {
+
+    0% {
+        opacity: 0;
+    }
+
+    50% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+
+}
+
+.fade_out {
+    animation: fadeOut 2s both ease-in-out;
+}
+
+@keyframes fadeOut {
+
+    100% {
+        opacity: 0;
+    }
+
+}
+
+.fade_in {
+    animation: fadeIn 1s both ease-in-out;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+}
+
+.fade_left {
+    animation: fadeLeft 1s both ease-out;
+}
+
+@keyframes fadeLeft {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0);
+
+    }
+
+}
+
+
+.letter {
+    display: inline-block;
+    opacity: 1;
+    animation: appear 6s ease-in-out infinite both;
+}
+
+@keyframes appear {
+    0% {
+        // opacity: 0;
+        transform: translateY(0px);
+    }
+
+    25% {
+        transform: translateY(-20px);
+    }
+
+    50% {
+        // opacity: 1;
+        transform: translateY(0px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
 }
