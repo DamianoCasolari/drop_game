@@ -24,7 +24,8 @@ export default {
 
 <template>
     <header class="d-flex justify-content-end me-4 me-md-3 justify-content-end align-items-center position-relative">
-        <!-- <div class="game_title fs-4">Block <br> pollution</div> -->
+        <!-- <div class="game_title fs-4">L'inquinamento marino ha causato un aumento del 26% delle "zone morte" oceaniche dal
+            1960, richiedendo interventi urgenti per preservare gli oceani.</div> -->
         <div class="header_drop position-absolute" :style="{ filter: `hue-rotate(${randomNumber}deg)` }">
         </div>
         <div class="img_container h-100">

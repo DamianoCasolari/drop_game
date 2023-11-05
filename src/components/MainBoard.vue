@@ -1,5 +1,5 @@
 <script>
-
+import { SeaPollutionSentences } from '../Js/ListSentences'
 
 export default {
     name: "MainBoard",
@@ -18,7 +18,8 @@ export default {
             levelGame: 20,
             newLevel: false,
             startGame: false,
-            intervalId: null
+            intervalId: null,
+            pollutionSentence: "",
 
         }
     },
@@ -26,6 +27,10 @@ export default {
         // ANIMATIONS
         generateRandomNumber() {
             return Math.floor(Math.random() * 255);
+        },
+        generateRandomSentence() {
+            const numberRandom = Math.floor(Math.random() * 23);
+            return SeaPollutionSentences[numberRandom]
         },
         mojsLives(distX, distY) {
             const COLORS = {
@@ -576,6 +581,8 @@ export default {
             this.levelGame = 20
             this.timeGapDrops = 3000
             this.numberSpokes = 4
+            this.pollutionSentence = this.generateRandomSentence()
+
 
 
             this.$nextTick(() => {
@@ -604,6 +611,7 @@ export default {
     mounted() {
         this.mojsConfetti()
         this.mojsSmoke()
+        this.pollutionSentence = this.generateRandomSentence()
     }
 
 }
@@ -615,7 +623,7 @@ export default {
 
         <div class="game_space h-100 m-auto position-relative cursor_none">
 
-            <!-- END GAME SIDE -->
+            <!-- START/END GAME SIDE -->
             <div v-if="!startGame"
                 class="overlay_start flex-column position-absolute h-100 w-100 d-flex justify-content-center align-items-center fade_in">
                 <div v-if="!firstGame" class="fw-bold mb-5">
@@ -631,10 +639,19 @@ export default {
                         Score
                     </span>
                 </div>
-                <div @click="startGameFunction()" @mouseover="mojsConfetti(); mojsSmoke()"
-                    class="fade_in hover_scale click_effect button_start mx-3 text-center">
+                <div v-if="firstGame"
+                    class="d-flex justify-content-center align-items-center mb-3 fs-5 lh_2 mx-3 text-center fade_in">
+                    {{ pollutionSentence }}
+                </div>
+                <div @click="firstGame = true" v-if="!firstGame" @mouseover="mojsConfetti(); mojsSmoke()"
+                    class="fade_in hover_scale click_effect button_start mx-3 text-center fs-5 lh_2">
+                    Did you know that ...
+                </div>
+                <div @click="startGameFunction()" v-if="firstGame" @mouseover="mojsConfetti(); mojsSmoke()"
+                    class="fade_in hover_scale click_effect button_start mx-3 text-center fs-5 lh_2">
                     Let's protect
-                    the sea</div>
+                    the <strong class="">sea</strong>
+                </div>
             </div>
             <!-- LEVEL GAME SIDE -->
             <div
