@@ -645,7 +645,7 @@ export default {
                 </div>
                 <div @click="firstGame = true" v-if="!firstGame" @mouseover="mojsConfetti(); mojsSmoke()"
                     class="fade_in hover_scale click_effect button_start mx-3 text-center fs-5 lh_2">
-                    Did you know that ...
+                    Did you know that...
                 </div>
                 <div @click="startGameFunction()" v-if="firstGame" @mouseover="mojsConfetti(); mojsSmoke()"
                     class="fade_in hover_scale click_effect button_start mx-3 text-center fs-5 lh_2">
