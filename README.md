@@ -1,7 +1,8 @@
-# Vue 3 + Vite
+# A game to raise public awareness about sea pollution
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+A little initial curiosity followed by the start button, the game consists of not letting the drops of oil fall into the sea. 
+If these reach the sea you will lose a life and the sea will be more polluted.
+Every 20 points you level up and the drops will fall faster. 
+The points are awarded based on the distance they fall, so the lower you block the drops, the more points you earn.
+Once the lives run out, the game ends
 
-## Recommended IDE Setup
-
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
