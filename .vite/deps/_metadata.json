@@ -1,0 +1,29 @@
+{
+  "hash": "766d77a7",
+  "browserHash": "a7b7cc36",
+  "optimized": {
+    "vue": {
+      "src": "../../node_modules/vue/dist/vue.runtime.esm-bundler.js",
+      "file": "vue.js",
+      "fileHash": "69a70631",
+      "needsInterop": false
+    },
+    "@mojs/core": {
+      "src": "../../node_modules/@mojs/core/dist/mo.umd.js",
+      "file": "@mojs_core.js",
+      "fileHash": "bba9ac74",
+      "needsInterop": true
+    },
+    "bootstrap": {
+      "src": "../../node_modules/bootstrap/dist/js/bootstrap.esm.js",
+      "file": "bootstrap.js",
+      "fileHash": "2c99c6ad",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-6TJCVOLN": {
+      "file": "chunk-6TJCVOLN.js"
+    }
+  }
+}
