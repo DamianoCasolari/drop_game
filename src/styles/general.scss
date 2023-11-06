@@ -8,9 +8,19 @@
 @import "/node_modules/bootstrap/scss/bootstrap";
 @import url('https://fonts.googleapis.com/css2?family=Indie+Flower&family=Rock+Salt&display=swap');
 
+html {
+    overflow: hidden;
+}
+
 body {
     // font-family: 'Indie Flower', cursive;
+    position: relative;
     font-family: 'Rock Salt', cursive;
-    overflow-y: hidden;
+    overflow: hidden;
+    user-select: none;
 
+}
+
+* {
+    touch-action: none;
 }
