@@ -471,7 +471,7 @@ export default {
         },
         // LOGIC SIDE METHODS 
         getImagePath: function (name) {
-            return new URL(`../../public/${name}`, import.meta.url).href
+            return new URL(`/public/${name}`, import.meta.url).href
         },
         createDrop() {
             const SpecificID = this.idDrop;
@@ -597,7 +597,7 @@ export default {
                         for (let index = 0; index < 3; index++) {
                             lives_container.insertAdjacentHTML('beforeend',
                                 ` <div class="heart_container thrill${index + 1} me-1 position-relative">
-                                <img width="30" src="${getImagePath("pngwing.png")}" alt="heart_icon">
+                                <img width="30" src="${this.getImagePath("pngwing.png")}" alt="heart_icon">
                               </div>`
                             )
 
